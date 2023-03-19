@@ -1,0 +1,1 @@
+# SensirionSHT20.NetNF
