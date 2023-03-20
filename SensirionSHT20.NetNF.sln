@@ -11,7 +11,12 @@ Project("{11A8DD76-328B-46DF-9F39-F559912D0360}") = "SensironSHT22Client", "Sens
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{FCD40304-FFF7-4151-8A7D-01B36BF3D206}"
 	ProjectSection(SolutionItems) = preProject
-		Images\SHT20769DscoTestrig.jpg = Images\SHT20769DscoTestrig.jpg
+		Images\SHT20HumidityWithHold.PNG = Images\SHT20HumidityWithHold.PNG
+		Images\SHT20HumidityWithHoldAndDelay70.PNG = Images\SHT20HumidityWithHoldAndDelay70.PNG
+		Images\SHT20STM32F769DiscoTestrig.jpg = Images\SHT20STM32F769DiscoTestrig.jpg
+		Images\SHT20TemperatureHumidityWorking.PNG = Images\SHT20TemperatureHumidityWorking.PNG
+		Images\SHT20TemperatureNoSleep.PNG = Images\SHT20TemperatureNoSleep.PNG
+		Images\SHT20TemperautreWithHoldAndSleep70.PNG = Images\SHT20TemperautreWithHoldAndSleep70.PNG
 	EndProjectSection
 EndProject
 Global
