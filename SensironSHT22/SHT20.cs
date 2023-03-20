@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 // Inspired by Arduino library https://github.com/RobTillaart/SHT2x thankyou Rob Tillart
+//  
+// CRC code inspired by https://www.espruino.com/modules/SHT2x.js thankyou espruino
 //
 //---------------------------------------------------------------------------------
 namespace devMobile.IoT.nanoFramework.Sensirion
@@ -33,6 +35,7 @@ namespace devMobile.IoT.nanoFramework.Sensirion
         private const byte TemperatureNoHold = 0xF3;
         private const byte HumidityNoHold = 0xF5;
         private const byte SoftReset = 0xFE;
+        private const short CrcPolynomial = 0x131;
 
         private I2cDevice _i2cDevice = null;
 
@@ -65,6 +68,8 @@ namespace devMobile.IoT.nanoFramework.Sensirion
 
             _i2cDevice.Read(readBuffer);
 
+            CheckCrc(readBuffer, 2, readBuffer[2]);
+
             ushort temperatureRaw = (ushort)(readBuffer[0] << 8);
             temperatureRaw += readBuffer[1];
 
@@ -86,6 +91,8 @@ namespace devMobile.IoT.nanoFramework.Sensirion
             Thread.Sleep(ReadingWaitmSec);
 
             _i2cDevice.Read(readBuffer);
+
+            CheckCrc(readBuffer, 2, readBuffer[2]);
 
             ushort humidityRaw = (ushort)(readBuffer[0] << 8);
             humidityRaw += readBuffer[1];
@@ -151,6 +158,25 @@ namespace devMobile.IoT.nanoFramework.Sensirion
             byte[] writeBufferWrite = new byte[2] { UserRegisterWrite, (byte)(readBuffer[0] & HeaterOffMask) };
 
             _i2cDevice.Write(writeBufferWrite);
+        }
+
+        void CheckCrc(byte[] bytes, byte bytesLen, byte checksum)
+        {
+            var crc = 0;
+
+            for (var i = 0; i < bytesLen; i++)
+            {
+                crc ^= bytes[i];
+                for (var bit = 8; bit > 0; --bit)
+                {
+                    crc = ((crc & 0x80) == 0x80) ? ((crc << 1) ^ CrcPolynomial) : (crc << 1);
+                }
+            }
+
+            if (crc != checksum)
+            {
+                throw new Exception("CRC Error");
+            }
         }
 
         public void Dispose()
