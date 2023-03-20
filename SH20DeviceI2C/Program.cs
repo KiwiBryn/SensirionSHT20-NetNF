@@ -54,13 +54,13 @@ namespace devMobile.IoT.nanoFramework
                 // Then read the Humidity
                 i2cDevice.WriteByte(0xF5);
 
-                // No delay 46%
-                //Thread.Sleep(50); // 52%
-                //Thread.Sleep(60); // 53%
-                Thread.Sleep(70); // 54%
-                //Thread.Sleep(90); // 54%
-                //Thread.Sleep(110); // 54% 
+                //Thread.Sleep(50);  
+                //Thread.Sleep(60);  
+                Thread.Sleep(70);  
+                //Thread.Sleep(90);  
+                //Thread.Sleep(110);   
 
+                
                 i2cDevice.Read(readBuffer);
 
                 ushort humidityRaw = (ushort)(readBuffer[0] << 8);
@@ -70,6 +70,8 @@ namespace devMobile.IoT.nanoFramework
 
                 double humidity = humidityRaw * (125.0 / 65536.0) - 6.0;
 
+                //Console.WriteLine($"{DateTime.UtcNow:HH:mm:ss} Temperature:{temperature:F1}°C");
+                //Console.WriteLine($"{DateTime.UtcNow:HH:mm:ss} Humidity:{humidity:F0}%");
                 Console.WriteLine($"{DateTime.UtcNow:HH:mm:ss} Temperature:{temperature:F1}°C Humidity:{humidity:F0}%");
 
                 Thread.Sleep(1000);
