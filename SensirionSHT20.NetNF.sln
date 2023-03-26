@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{FCD403
 		Images\SHT20STM32F769DiscoTestrig.jpg = Images\SHT20STM32F769DiscoTestrig.jpg
 		Images\SHT20TemperatureHumidityWorking.PNG = Images\SHT20TemperatureHumidityWorking.PNG
 		Images\SHT20TemperatureNoSleep.PNG = Images\SHT20TemperatureNoSleep.PNG
-		Images\SHT20TemperautreWithHoldAndSleep70.PNG = Images\SHT20TemperautreWithHoldAndSleep70.PNG
+		Images\SHT20TemperatureWithHoldAndSleep70.PNG = Images\SHT20TemperatureWithHoldAndSleep70.PNG
 	EndProjectSection
 EndProject
 Global
