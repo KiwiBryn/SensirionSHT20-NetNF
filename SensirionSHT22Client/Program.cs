@@ -17,8 +17,8 @@
 // nanoff --platform ESP32 --serialport COM7 --update
 //
 //---------------------------------------------------------------------------------
-//#define ST_STM32F769I_DISCOVERY 
-#define  SPARKFUN_ESP32_THING_PLUS
+#define ST_STM32F769I_DISCOVERY 
+//#define  SPARKFUN_ESP32_THING_PLUS
 namespace devMobile.IoT.Device.Sht20
 {
     using System;
