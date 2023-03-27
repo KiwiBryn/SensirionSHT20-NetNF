@@ -67,7 +67,7 @@ namespace devMobile.IoT.Device.Sht20
 
             if (_i2cDevice.WriteByte(TemperatureNoHold).Status != I2cTransferStatus.FullTransfer)
             {
-                throw new ApplicationException("SHT20 Temperature no hold write failed");
+                throw new ApplicationException("SHT20 Temperature write failed");
             }
 
             Thread.Sleep(ReadingWaitmSec);
@@ -97,7 +97,7 @@ namespace devMobile.IoT.Device.Sht20
 
             if ( _i2cDevice.WriteByte(HumidityNoHold).Status != I2cTransferStatus.FullTransfer)
             {
-                throw new ApplicationException("SHT20 Humidity no hold write failed");
+                throw new ApplicationException("SHT20 Humidity write failed");
             }
 
             Thread.Sleep(ReadingWaitmSec);
@@ -124,7 +124,10 @@ namespace devMobile.IoT.Device.Sht20
                 throw new ArgumentNullException(nameof(_i2cDevice));
             }
 
-            _i2cDevice.WriteByte(SoftReset);
+            if ( _i2cDevice.WriteByte(SoftReset).Status !=  I2cTransferStatus.FullTransfer)
+            {
+                throw new ApplicationException("SHT20 reset write failed");
+            }
 
             Thread.Sleep(70);
         }
@@ -138,11 +141,18 @@ namespace devMobile.IoT.Device.Sht20
                 throw new ArgumentNullException(nameof(_i2cDevice));
             }
 
-            _i2cDevice.WriteRead(writeBufferRead, readBuffer);
+            if ( _i2cDevice.WriteRead(writeBufferRead, readBuffer).Status != I2cTransferStatus.FullTransfer)
+            {
+                throw new ApplicationException("SHT20 HeaterOn read failed");
+            }
+
 
             byte[] writeBufferWrite = new byte[2] { UserRegisterWrite, (byte)(readBuffer[0] | HeaterOnMask) };
 
-            _i2cDevice.Write(writeBufferWrite);
+            if ( _i2cDevice.Write(writeBufferWrite).Status != I2cTransferStatus.FullTransfer)
+            {
+                throw new ApplicationException("SHT20 HeaterOn write failed");
+            }
         }
 
         public bool IsHeaterOn()
@@ -154,7 +164,10 @@ namespace devMobile.IoT.Device.Sht20
                 throw new ArgumentNullException(nameof(_i2cDevice));
             }
 
-            _i2cDevice.WriteRead(writeBuffer, readBuffer);
+            if (_i2cDevice.WriteRead(writeBuffer, readBuffer).Status != I2cTransferStatus.FullTransfer)
+            {
+                throw new ApplicationException("SHT20 IsHeaterOn read failed");
+            }
 
             return ((readBuffer[0] & HeaterOnMask) == HeaterOnMask);
         }
@@ -168,11 +181,17 @@ namespace devMobile.IoT.Device.Sht20
                 throw new ArgumentNullException(nameof(_i2cDevice));
             }
 
-            _i2cDevice.WriteRead(writeBufferRead, readBuffer);
+            if (_i2cDevice.WriteRead(writeBufferRead, readBuffer).Status != I2cTransferStatus.FullTransfer)
+            {
+                throw new ApplicationException("SHT20 HeaterOff read failed");
+            }
 
             byte[] writeBufferWrite = new byte[2] { UserRegisterWrite, (byte)(readBuffer[0] & HeaterOffMask) };
 
-            _i2cDevice.Write(writeBufferWrite);
+            if ( _i2cDevice.Write(writeBufferWrite).Status != I2cTransferStatus.FullTransfer)
+            {
+                throw new ApplicationException("SHT20 HeaterOff write failed");
+            }
         }
 
         void CheckCrc(byte[] bytes, byte bytesLen, byte checksum)
