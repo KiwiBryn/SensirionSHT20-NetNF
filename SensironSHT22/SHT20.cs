@@ -18,7 +18,7 @@
 // CRC code inspired by https://www.espruino.com/modules/SHT2x.js thankyou espruino
 //
 //---------------------------------------------------------------------------------
-namespace devMobile.IoT.nanoFramework.Sensirion
+namespace devMobile.IoT.Device.Sht20
 {
     using System;
     using System.Device.I2c;
@@ -45,11 +45,14 @@ namespace devMobile.IoT.nanoFramework.Sensirion
             SpanByte readBuffer = new byte[1] { 0 };
             _i2cDevice = i2cDevice ?? throw new ArgumentNullException(nameof(_i2cDevice));
 
-            _i2cDevice.WriteRead(writeBuffer, readBuffer);
+            if (_i2cDevice.WriteRead(writeBuffer, readBuffer).Status != I2cTransferStatus.FullTransfer) 
+            {
+                throw new ApplicationException("SHT20 Device write failed");
+            }
 
             if (readBuffer[0] == 0)
             {
-                throw new ApplicationException("SHT20 device not found");
+                throw new ApplicationException("SHT20 Device not found");
             }
         }
 
@@ -62,11 +65,17 @@ namespace devMobile.IoT.nanoFramework.Sensirion
                 throw new ArgumentNullException(nameof(_i2cDevice));
             }
 
-            _i2cDevice.WriteByte(TemperatureNoHold);
+            if (_i2cDevice.WriteByte(TemperatureNoHold).Status != I2cTransferStatus.FullTransfer)
+            {
+                throw new ApplicationException("SHT20 Temperature no hold write failed");
+            }
 
             Thread.Sleep(ReadingWaitmSec);
 
-            _i2cDevice.Read(readBuffer);
+            if ( _i2cDevice.Read(readBuffer).Status != I2cTransferStatus.FullTransfer)
+            {
+                throw new ApplicationException("SHT20 Temperature read failed");
+            }
 
             CheckCrc(readBuffer, 2, readBuffer[2]);
 
@@ -86,11 +95,17 @@ namespace devMobile.IoT.nanoFramework.Sensirion
                 throw new ArgumentNullException(nameof(_i2cDevice));
             }
 
-            _i2cDevice.WriteByte(HumidityNoHold);
+            if ( _i2cDevice.WriteByte(HumidityNoHold).Status != I2cTransferStatus.FullTransfer)
+            {
+                throw new ApplicationException("SHT20 Humidity no hold write failed");
+            }
 
             Thread.Sleep(ReadingWaitmSec);
 
-            _i2cDevice.Read(readBuffer);
+            if (_i2cDevice.Read(readBuffer).Status != I2cTransferStatus.FullTransfer)
+            {
+                throw new ApplicationException("SHT20 Humidity read failed");
+            }
 
             CheckCrc(readBuffer, 2, readBuffer[2]);
 
