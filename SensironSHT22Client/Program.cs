@@ -13,17 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// nanoff --platform ESP32 --serialport COM7 --update
 // nanoff --target ST_STM32F769I_DISCOVERY --update 
+// nanoff --platform ESP32 --serialport COM7 --update
 //
 //---------------------------------------------------------------------------------
-namespace devMobile.IoT.nanoFramework.Sensirion
+//#define ST_STM32F769I_DISCOVERY 
+#define  SPARKFUN_ESP32_THING_PLUS
+namespace devMobile.IoT.Device.Sht20
 {
     using System;
     using System.Device.I2c;
     using System.Threading;
 
-    //using nanoFramework.Hardware.Esp32;
+#if SPARKFUN_ESP32_THING_PLUS
+    using nanoFramework.Hardware.Esp32;
+#endif
 
     class Program
     {
@@ -31,8 +35,12 @@ namespace devMobile.IoT.nanoFramework.Sensirion
         {
             const int busId = 1;
 
-            //Configuration.SetPinFunction(Gpio.IO04, DeviceFunction.I2C1_DATA);
-            //Configuration.SetPinFunction(Gpio.IO05, DeviceFunction.I2C1_CLOCK);
+            Thread.Sleep(5000);
+
+#if SPARKFUN_ESP32_THING_PLUS
+            Configuration.SetPinFunction(Gpio.IO23, DeviceFunction.I2C1_DATA);
+            Configuration.SetPinFunction(Gpio.IO22, DeviceFunction.I2C1_CLOCK);
+#endif
 
             I2cConnectionSettings i2cConnectionSettings = new(busId, Sht20.DefaultI2cAddress);
 
