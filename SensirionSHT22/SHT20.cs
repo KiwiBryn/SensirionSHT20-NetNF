@@ -22,8 +22,14 @@ namespace devMobile.IoT.Device.Sht20
 {
     using System;
     using System.Device.I2c;
+    using System.Device.Model;
     using System.Threading;
+    using UnitsNet;
 
+    /// <summary>
+    /// Temperature and humidity sensor Sensirion SHT20.
+    /// </summary>
+    [Interface("Humidity and Temperature Sensor SHT20")]
     public class Sht20 : IDisposable
     {
         public const byte DefaultI2cAddress = 0x40;
@@ -56,8 +62,11 @@ namespace devMobile.IoT.Device.Sht20
             }
         }
 
-
-        public double Temperature()
+        /// <summary>
+        /// SHT20 Temperature [°C].
+        /// </summary>
+        [Telemetry]
+        public Temperature Temperature()
         {
             byte[] readBuffer = new byte[3] { 0, 0, 0 };
             if (_i2cDevice == null)
@@ -84,10 +93,14 @@ namespace devMobile.IoT.Device.Sht20
 
             double temperature = temperatureRaw * (175.72 / 65536.0) - 46.85;
 
-            return temperature;
+            return UnitsNet.Temperature.FromDegreesCelsius(temperature);
         }
 
-        public double Humidity()
+        /// <summary>
+        /// Relative Humidity [%].
+        /// </summary>
+        [Telemetry]
+        public RelativeHumidity Humidity()
         {
             byte[] readBuffer = new byte[3] { 0, 0, 0 };
             if (_i2cDevice == null)
@@ -114,7 +127,7 @@ namespace devMobile.IoT.Device.Sht20
 
             double humidity = humidityRaw * (125.0 / 65536.0) - 6.0;
 
-            return humidity;
+            return UnitsNet.RelativeHumidity.FromPercent(humidity);
         }
 
         public void Reset()

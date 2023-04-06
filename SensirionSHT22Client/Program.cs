@@ -25,6 +25,8 @@ namespace devMobile.IoT.Device.Sht20
     using System.Device.I2c;
     using System.Threading;
 
+    using UnitsNet;
+
 #if SPARKFUN_ESP32_THING_PLUS
     using nanoFramework.Hardware.Esp32;
 #endif
@@ -52,13 +54,11 @@ namespace devMobile.IoT.Device.Sht20
 
                     while (true)
                     {
-                        double temperature = sht20.Temperature();
-                        double humidity = sht20.Humidity();
 #if HEATER_ON_OFF
 					    sht20.HeaterOn();
 					    Console.WriteLine($"{DateTime.Now:HH:mm:ss} HeaterOn:{sht20.IsHeaterOn()}");
 #endif
-                        Console.WriteLine($"{DateTime.UtcNow:HH:mm:ss} Temperature:{temperature:F1}°C Humidity:{humidity:F0}% HeaterOn:{sht20.IsHeaterOn()}");
+                        Console.WriteLine($"{DateTime.UtcNow:HH:mm:ss} Temperature:{sht20.Temperature().DegreesCelsius:F1}°C Humidity:{sht20.Humidity().Percent:F0}% HeaterOn:{sht20.IsHeaterOn()}");
 #if HEATER_ON_OFF
 					    sht20.HeaterOff();
 					    Console.WriteLine($"{DateTime.Now:HH:mm:ss} HeaterOn:{sht20.IsHeaterOn()}");
